@@ -73,16 +73,19 @@ get_pretrained:
 get_pretrainedx2:
 		wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -P experiments/pretrained_models
 
-
 infere1:
-		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i upload --outscale 3.5 --face_enhance
+		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i $(path_in_images) --outscale 3.5 --face_enhance
 
 
 infere2:
-		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i upload --outscale 3.5
+		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i $(path_in_images) --outscale 3.5 -o $(path_out_images)
+
+
+infere3:
+		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i $(path_in_images) -s 2
 
 dev3:
-		$(PY) inference_realesrgan_nii.py -n RealESRGAN_x2plus -i inputs -s 2
+		$(PY) inference_realesrgan_nii.py -n RealESRGAN_x2plus -i $(path_in_images) -s 2
 
 dev_f1:
 		$(PY) inference_realesrgan_nii.py -n RealESRGAN_x2plus -i $(array_data_root) -s 2

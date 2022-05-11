@@ -6,8 +6,11 @@ tb_logger/*
 wandb/*
 tmp/*
 realesrgan/weights/*
-
 version.py
+
+out/images/*_out.*
+
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
