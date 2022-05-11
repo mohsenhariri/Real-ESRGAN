@@ -5,41 +5,12 @@ PY := python3
 include .env.dev
 export
 
-SRC := ./src
-DIST := ./dist
-BUILD := ./build
+SRC := src
+DIST := dist
+BUILD := build
 
 .PHONY: test all dev clean dev pyserve $(SRC) $(DIST) $(BUILD)
 
-PYPIU = mhariri
-PYPIP = password
-
-
-ifeq ($(SSL), true)
-PROTOCOL := HTTPS
-else
-PROTOCOL := HTTP
-endif
-URL := $(PROTOCOL)://$(HOST):$(PORT)
-
-cert: # HTTPS server
-		if [ ! -d "./certs" ]; then mkdir ./certs; fi
-		if [ -f "./certs/openssl.conf" ] ; then \
-		openssl req -x509 -new -config ./certs/openssl.conf -out ./certs/cert.pem -keyout ./certs/key.pem ;  else \
-		openssl req -x509 -nodes -newkey rsa:4096 -out ./certs/cert.pem -keyout ./certs/key.pem -sha256 -days 365 ;fi
-
-
-docker-up:
-		docker compose -p $(PROJECT) -f ./config/compose.yaml up -d
-
-docker-down:
-		docker compose -p $(PROJECT) -f ./config/compose.yaml down
-
-clean: $(DIST) $(BUILD)
-		rm -r $(DIST)/* $(BUILD)/*
-
-clcache:
-		rm -r __pycache__
 
 env:
 		$(PY) -m venv env
@@ -92,8 +63,30 @@ publish:
 		@:
 
 
+pre: # https://github.com/xinntao/Real-ESRGAN#installation
+		$(PY) setup.py develop
+
+
 get_pretrained:
 		wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
 
-infere:
+get_pretrainedx2:
+		wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth -P experiments/pretrained_models
+
+
+infere1:
 		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i upload --outscale 3.5 --face_enhance
+
+
+infere2:
+		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i upload --outscale 3.5
+
+dev3:
+		$(PY) inference_realesrgan_nii.py -n RealESRGAN_x2plus -i inputs -s 2
+
+dev_f1:
+		$(PY) inference_realesrgan_nii.py -n RealESRGAN_x2plus -i $(array_data_root) -s 2
+
+
+dev_f1_labels:
+		$(PY) inference_realesrgan_nii.py -n RealESRGAN_x2plus -i $(array_data_labels_root) -s 2
