@@ -78,7 +78,7 @@ infere1:
 
 
 infere2:
-		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i $(path_in_images) --outscale 3.5 -o $(path_out_images)
+		$(PY) inference_realesrgan.py -n RealESRGAN_x4plus -i $(path_in_images) --outscale 2 -o $(path_out_images)
 
 
 infere3:
